@@ -7,4 +7,4 @@
 
 需要替换nets_factory.py文件
 
-records文件的encode和decode代码在CN文件夹下
+records文件的encode和decode代码在CNN文件夹下
