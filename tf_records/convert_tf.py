@@ -1,7 +1,19 @@
 from parse_tf.encode import write_image_label_pairs_to_tfrecord
-from tools.get_filelist import get_filename_pairs
+
+def parse_split_file(filelist_path):
+    # 解析文本文件
+    with open(filelist_path) as f:
+        return [line.strip() for line in f.readlines()]
+
+def get_filename_pairs(filelist_path):
+    filenames = parse_split_file(filelist_path)
+    filename_pairs = []
+    for file in filenames:
+        filename_pairs.append((file.split('    ')[0],file.split('    ')[1]))
+    return filename_pairs
+
 def get_tfdata(config):
-    filetrain_pairs = get_filename_pairs(config.filelist_dir + 'train.txt')#得到（（filename，label）,...）
+    filetrain_pairs = get_filename_pairs(config.filelist_dir + 'train.txt')
     filetest_pairs = get_filename_pairs(config.filelist_dir + 'test.txt')
     if config.split_name == 'all' or config.split_name == 'train':
         write_image_label_pairs_to_tfrecord(filetrain_pairs,config.tfdata_path,

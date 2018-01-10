@@ -21,7 +21,6 @@ def read_image_label_pairs_from_tfrecord(tfrecords_filename):
     image_annotation_pairs : array of tuples (img, label)
         The image and label that were read from the file
     """
-
     images_labels = []
     record_iterator = tf.python_io.tf_record_iterator(path=tfrecords_filename)
     for string_record in record_iterator:
@@ -80,12 +79,11 @@ def read_tfrecord_and_decode_into_image_label_pair_tensors(tfrecord_filenames_qu
         })
 
     image = tf.decode_raw(features['image/encoded'], tf.uint8)
-
     label = tf.cast(features['image/class/label'], tf.int64)
     height = tf.cast(features['image/height'], tf.int64)
     width = tf.cast(features['image/width'], tf.int64)
     depth = tf.cast(features['image/depth'], tf.int64)
-
-    image = tf.reshape(image, [size,size,2])   #height,width,depth？？？
-    image = tf.cast(image, tf.float32) * (1. / 255) - 0.5
+    image = tf.reshape(image, [size[0], size[1], 3])
+    # image = tf.image.per_image_standardization(image)
     return image, label
+
